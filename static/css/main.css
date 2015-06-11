@@ -1,0 +1,105 @@
+body{ background:url(../images/bg.jpg) top left repeat; padding:0px; margin:0px;}
+
+.margin-left0{ margin-left:0px;}
+.margin-right0{ margin-right:0px;}
+.padding-left0{ padding-left:0px;}
+.padding-right0{ padding-right:0px;}
+.margin-top20{ margin-top:20px; float:left; width:100%;}
+.margin-top10{ margin-top:10px;}
+
+.ads{ background:#fff ; text-align:center; font-size:29px; color:#666; padding:0px;}
+.ads img{ height: 100px; width: 100%; }
+
+.home-tab{ width:464px; margin:0 auto;}
+.home-tab ul{ width:101%; float:left; margin:0px; padding:0px; border-top:rgb(205, 43, 43) solid 1px;}
+.home-tab ul li{ width:auto; float:left; margin:0px; padding:0px; list-style:none; color: #000; border-top:transparent solid 3px;}
+.home-tab ul li:hover{ width:auto; float:left; margin:0px; padding:0px; list-style:none; background:none; color: #fff; border-top:#cd2b2b solid 3px;}
+.home-tab ul li a{ text-decoration:none; padding:10px 42px; float:left; text-align:center; color:#333; font-size:17px;}
+.home-tab ul li.active{ background:none; color:#FFF; border-top:#cd2b2b solid 3px;}
+.postnew{ float: right; width:auto; margin-top:18px;}
+.slider{ width:100%; float:left; margin:20px 0px;}
+
+footer{ background:url(../images/footer-bg.jpg) top left repeat; margin-top:50px; padding-top:50px; }
+footer .widget-body p{ color: rgb(168, 168, 168);    float: left;    margin: 20px 0;    min-width: 219px;    padding: 0;    text-align: left; }
+footer .icon{ border: 3px solid rgb(205, 43, 43);    border-radius: 50px;    color: rgb(255, 255, 255);    float: left;    font-size: 31px;    line-height: 54px;    margin: 12px 11px 0 0;    width: 60px;}
+.scroll-top{ color:#cd2b2b; font-size:30px; float:right; text-align:right;}
+.scroll-top:hover{ color:#FFF; font-size:30px; float:right; text-align:right;}
+
+
+.content{ width:100%; float:left; margin-top:50px;}
+
+
+
+.nav-bar-tab{ width:100%; float:left;}
+.nav-bar-tab ul{ width:100%; float:left; margin:0px; padding:0px; background:#808080;}
+.nav-bar-tab ul li{ width:auto; float:left; margin:0px; padding:0px; list-style:none; border-right:#ccc solid 1px; }
+.nav-bar-tab ul li:hover{ width:auto; float:left; margin:0px; padding:0px; list-style:none; background:#cd2b2b; border-right:#ccc solid 1px; }
+.nav-bar-tab ul li a{ text-decoration:none; padding:10px 20px; float:left; text-align:center; color:#FFF; font-size:17px; font-weight:normal;}
+.nav-bar-tab ul li.active{ background:#cd2b2b; color:#FFF;}
+.nav-bar-tab ul li a i{ font-size:17px;}
+.nav-bar-tab ul .sub-menu a{ font-size:12px; margin:13px 0px 0px 0px; padding:0px 10px; border-right:#CCC solid 1px; color:#FFF !important; float:left; cursor: pointer;}
+.nav-bar-tab ul .sub-menu a:hover{ font-size:12px; margin:13px 0px 0px 0px; padding:0px 10px; border-right:#CCC solid 1px; color:#5bc0de !important; text-decoration:none;}
+
+
+.white-box{ background:#FFF; border:#e0e0e0 solid 1px; padding:20px 10px; }
+
+
+
+.post-box{ background:#FFF; border-bottom:#e0e0e0 solid 1px ; border-right:#e0e0e0 solid 1px ; border-left:#e0e0e0 solid 1px ; border-top:#db2e2e solid 3px ; padding:10px; margin:20px 0px; }
+.post-box h4{ border-bottom:#e0e0e0 solid 0px; padding-bottom:15px; color:#666;}
+.post-box h4 a{  padding-bottom:15px; color:#333; font-size: 14px; text-transform: none;}
+.post-box h3{ color:#cd2b2b; font-size:18px;}
+.post-box h4 a{text-decoration: none !important; border-bottom: 0;}
+
+.post-box-button ul{ width:auto; float:left; margin:25px 0px 0px 0px; padding:0px;}
+.post-box-button ul li{ width:auto; float:left; margin:5px 5px 0px 0px; padding:0px; list-style:none; background:#808080; }
+.post-box-button ul li:hover{ width:auto; float:left; margin:5px 5px 0px 0px; padding:0px; list-style:none; background:#cd2b2b;  }
+.post-box-button ul li a{ text-decoration:none; padding:0px 10px 0px 0px; float:left; text-align:center; color:#FFF; font-size:13px; font-weight:normal;}
+.post-box-button ul li a i{ font-size:17px; background:#cd2b2b; padding:7px ; margin-right: 5px;}
+
+.post-box.panel-group{ width:100%; float:left;font-size:14px;}
+.post-box .img-gallery{ width:100%; float:left; background:#f6f6f6; border-top:#e0e0e0 solid 1px; border-bottom:#e0e0e0 solid 1px; padding:5px; margin-top:15px;}
+
+.post-box .panel-default{ border:none;}
+.post-box .panel-heading { background:none !important; border:0px solid !important; margin:0px; padding:0px;}
+.white{ color:#FFF;}
+
+
+.category-selection ul{ width:auto; float:left; margin:0px 0px 0px 0px; padding:0px;}
+.category-selection ul li{ width:100%; float:left; margin:10px 5px 10px 0px; padding:0px; list-style:none; background:#808080; }
+.category-selection ul li:hover{ width:100%; float:left; margin:10px 5px 10px 0px; padding:0px; list-style:none; background:#cd2b2b;  }
+.category-selection ul li a{ text-decoration:none; padding:5px 10px 0px 6px; float:left; text-align:center; color:#FFF; font-size:13px; font-weight:normal;}
+.category-selection ul li a i{ font-size:17px; background:#cd2b2b; padding:7px}
+.category-selection ul li span { font-size:17px; color:#FFF; float:right;}
+.category-selection ul li span a{ font-size:17px; padding:4px 14px 0px 0px; color:#FFF; float:right;}
+
+.ad-more{ background: #cd2b2b; padding: 7px 10px; color: #FFF; float: right; margin-top: -34px;}
+.ad-more:hover{ background: #cd2b2b; padding: 7px 10px; color: #FFF; float: right; margin-top: -34px;}
+
+
+.contac-button{background: none repeat scroll 0 0 rgb(0, 128, 0);
+    float: left;
+    margin: -5px 7px -5px -5px;
+    padding: 15px;}
+
+/*==== new style 18-10-2014 ===*/
+
+.slide-1th h3:hover{color:#cd2b2b;}
+.slide-2nd h3:hover{color:#cd2b2b;}
+.slide-3rd h3:hover{color:#cd2b2b;}
+
+.read-title a .read-title:hover,a.read-title:focus {color:#CD2B2B !important; background: transparent }
+.border-right{ border-right:#ccc solid 1px; }
+
+.contact_details_button{ margin-right: 17px;}
+
+
+.margin-0 {margin: 0px !important;}
+
+.new-footer ul{ margin:0 auto;    padding:0px; width: 285px;}
+.new-footer ul li{ float: left; width: auto; list-style: none; color: #ffffff; cursor: pointer;}
+.new-footer ul li:hover{ float: left; width: auto; list-style: none; color: #cd2b2b; cursor: pointer;}
+#new-footer-padding{ padding: 20px 0 !important;}
+
+.desktop-view{ display: block;}
+.mobile-view{ display: none;}

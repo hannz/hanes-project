@@ -1,0 +1,126 @@
+{%  extends "master.html" %}
+{% load imagefit %}
+
+{% block extracss  %}
+  <style>
+
+    footer{display: none;}
+
+  </style>
+
+{% endblock %}
+{% block extrajs  %}
+
+{% endblock %}
+
+{% block content %}
+{#    <div class="divider text-center"> <img src="{{ STATIC_URL }}images/shadows.png" class="img-responsive" alt=""> </div>#}
+    <div class="home-tab">
+      <ul>
+        <li  data-slide-to="0" class="active border-right"><a href="{% url 'menu-all-post' "Arbeit" %}">Arbeit</a></li>
+        <li  class="border-right" data-slide-to="1"><a href="{% url 'menu-all-post' "Gebrauchtes" %}">Gebrauchtes</a></li>
+        <li  data-slide-to="2"><a href="{% url 'menu-all-post' "Produkte" %}">Produkte</a></li>
+      </ul>
+    </div>
+    <div class="slider">
+      <div class="bs-example">
+        <div id="myCarousel" class="carousel slide" data-interval="3000" data-ride="carousel">
+          <!-- Carousel indicators -->
+          <ol class="carousel-indicators">
+
+          </ol>
+          <!-- Carousel items -->
+          <div class="carousel-inner">
+            <div class=" active item">
+              <div class="container">
+                  {% for a in arbeit_details_list %}
+                      <div class="slide-1th ">
+                       <div class="row">
+                        <div class="col-lg-1">
+                         <a href="/post-by-title/{{ a.post_title }}"><img src="{{ a.post_image|media_resize:'150x190'}}" class="img-responsive" alt="" style=" margin: 16px 0;"></a>
+                        </div>
+                        <div class="col-lg-7">
+                         <a href="/post-by-title/{{ a.post_title }}"><h3 class="thin">{% autoescape off %}{{ a.post_title }}{% endautoescape %}</h3></a>
+                         <p> {% autoescape off %}{{ a.post_description|truncatewords:"20" }} {% endautoescape %}</p>
+                      </div>
+                       <div class="col-md-4">
+                         <div class="post-box-button">
+                        <ul>
+                          <li><a ><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png" height="14" style="margin-top:-7px !important;"></i>{{ a.post_region }}</a></li>
+                          <li><a><i class="fa fa-list-ul"></i>{{ a.post_category }}</a></li>
+                        </ul>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+                     {% endfor %}
+
+              </div>
+            </div>
+            <div class="item">
+            <div class="container">
+
+                     {% for g in gebrauchtes_details_list %}
+                      <div class="slide-1th ">
+                       <div class="row">
+                        <div class="col-lg-1">
+                         <a href="/post-by-title/{{ g.post_title }}"><img src="{{ g.post_image|media_resize:'150x190'}}" class="img-responsive" alt="" style="margin: 16px 0;"></a>
+                        </div>
+                        <div class="col-lg-7">
+                         <a href="/post-by-title/{{ g.post_title }}"><h3 class="thin">{% autoescape off %}{{ g.post_title }}{% endautoescape %}</h3></a>
+                         <p> {% autoescape off %}{{ g.post_description|truncatewords:"20" }} {% endautoescape %}</p>
+                      </div>
+                       <div class="col-md-4">
+                         <div class="post-box-button">
+                        <ul>
+                          <li><a ><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png" height="14"></i>{{ g.post_region }}</a></li>
+                          <li><a><i class="fa fa-list-ul"></i>{{ g.post_category }}</a></li>
+                        </ul>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+                     {% endfor %}
+
+            </div>
+
+            </div>
+            <div class="item">
+            <div class="container">
+
+                     {% for p in produkte_details_list %}
+                      <div class="slide-1th ">
+                       <div class="row">
+                        <div class="col-lg-1">
+                         <a href="/post-by-title/{{ p.post_title }}"><img src="{{ p.post_image|media_resize:'150x190'}}" class="img-responsive" alt="" style="width:100px; height:70px; margin: 16px 0;"></a>
+                        </div>
+                        <div class="col-lg-7">
+                         <a href="/post-by-title/{{ p.post_title }}"><h3 class="thin">{% autoescape off %}{{ p.post_title }}{% endautoescape %}</h3></a>
+                         <p> {% autoescape off %}{{ p.post_description|truncatewords:"20" }} {% endautoescape %}</p>
+                      </div>
+                       <div class="col-md-4">
+                         <div class="post-box-button">
+                        <ul>
+                          <li><a><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png" height="14"></i>{{ p.post_region }}</a></li>
+                          <li><a><i class="fa fa-list-ul"></i>{{ p.post_category }}</a></li>
+                        </ul>
+                      </div>
+                      </div>
+                      </div>
+                      </div>
+                     {% endfor %}
+
+            </div>
+            </div>
+          </div>
+          <!-- Carousel nav -->
+
+      </div>
+    </div>
+    </div>
+
+<div class="clearfix"></div>
+
+{% endblock %}
+
+

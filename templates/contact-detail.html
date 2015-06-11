@@ -1,0 +1,898 @@
+{%  extends "master.html" %}
+{% load imagefit %}
+<script src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+{% block extracss  %}
+{#<style>#}
+{#    #new-footer-padding{ padding: 20px 0 !important; width:100%; float:left; position:fixed ; bottom:0px;}#}
+{#</style>#}
+{% endblock %}
+
+{% block extrajs %}
+
+<script type="text/javascript">
+$(document).ready(function(e) {
+	$(".parent").click(function(e) {
+		$(".sub-menu > div,#white-box").hide();
+		e.preventDefault();
+		$($(this).attr("rel")).show();
+    });
+});
+</script>
+
+{#script for filtered division#}
+<script>
+	$(document).ready(function() {
+    function toggleChevron(e) {
+    $(e.target)
+        .prev('.panel-heading')
+        .find("i.indicator")
+        .toggleClass('fa fa-caret-down fa fa-caret-up');
+}
+
+$('#accordionfilter').on('hidden.bs.collapsefilter', toggleChevron);
+$('#accordionfilter').on('shown.bs.collapsefilter', toggleChevron);
+	});
+</script>
+<script>
+         $(document).ready(function(e) {
+           $(".Arbeit-menu-class").parent().removeClass('active');
+           $(".Gebrauchtes-menu-class").parent().removeClass('active');
+           $(".Produkte-menu-class").parent().removeClass('active');
+           var selected_menu = $('#menu_hidden_field').val();
+             if(selected_menu == "Arbeit"){
+                 $(".Arbeit-menu-class").parent().addClass('active');
+               }
+               if(selected_menu == "Gebrauchtes"){
+                $(".Gebrauchtes-menu-class").parent().addClass('active');
+
+               }
+               if(selected_menu == "Produkte"){
+                 $(".Produkte-menu-class").parent().addClass('active');
+           }
+
+       });
+</script>
+<script type="text/javascript">
+$(document).ready(function(e) {
+     var region_list_array = [];
+     var category_list_array = [];
+     var search_post_title_array = [];
+     $(".category-collapse").hide();
+        var parent_name = "category";
+	$(".parent").click(function(e) {
+        parent_name = $(this).attr('value');
+		$(".sub-menu > div,#white-box").hide();
+		e.preventDefault();
+		$($(this).attr("rel")).show();
+    });
+	$(".sub-menu .tag").on('click', function(e) {
+        e.preventDefault();
+        var selected_menu = $(".sub-menu .tag").attr('data-menu');
+        if(parent_name == "category") {
+            var s = category_list_array.indexOf($(this).attr("rel"));
+            if(s == -1){
+                $(".bootstrap-tagsinput").append('<span class="tag label label-info">'+$(this).attr("rel")+'<span> <a href="#" value="'+$(this).attr("rel")+'" data-id="'+parent_name+'" class="white x-destroy" data-menu="'+selected_menu+'">X</a></span></span>');
+                category_list_array.push($(this).attr("rel"));
+                }
+        }
+        else{
+             var r = region_list_array.indexOf($(this).attr("rel"));
+            if(r == -1){
+               $(".bootstrap-tagsinput").append('<span class="tag label label-info">'+$(this).attr("rel")+'<span> <a href="#" value="'+$(this).attr("rel")+'" data-id="'+parent_name+'" class="white x-destroy" data-menu="'+selected_menu+'">X</a></span></span>');
+               region_list_array.push($(this).attr("rel"));
+                }
+        }
+         var order_type = $('#order_type').val();
+         category_list_array_stringify= JSON.stringify(category_list_array);
+         region_list_array_stringify= JSON.stringify(region_list_array);
+         search_post_title_array_stringify= JSON.stringify(search_post_title_array);
+         $.ajax({
+                    url: "{% url "filterby-region-or-category" %}",
+                    type: "post",
+                    data: {'category_list_array_stringify': category_list_array_stringify,
+                           'region_list_array_stringify':region_list_array_stringify,
+                            'search_post_title_array_stringify':search_post_title_array_stringify,
+                            'selected_menu':selected_menu,
+                            'order_type':order_type},
+                    returnType: "text",
+                    success: function (data) {
+                         $(".post-alldata-panel-class").hide();
+                         $(".post-filterdata-panel-class").empty();
+                        if(data.length != 0){
+                            for (i = 0; i < data.length; i++) {
+
+                        var five_post_images_list_var = data[i]['five_post_images_list'];
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box post-box'+data[i]['post_id']+'">' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div class="left-part">'+
+                                        '<div class="post-box-img post-main-image'+data[i]['post_id']+'"><img src="{{ MEDIA_URL }}'+data[i]['post_image']+'" class="img-responsive" alt=""></div></div>'+
+                                        '<div class="right-part right-part'+data[i]['post_id']+'">'+
+                                        '<div class="post-box-title margin-0"><h4 class="panel-title margin-0"><i class="indicator glyphicon fa fa-caret-down  pull-right"></i><a class="accordion-toggle read-title-ajax" data-toggle="collapse" data-parent="#accordion" id="'+data[i]['post_id']+'" data-parent="#accordion" href="#collapsefilter'+data[i]['post_id']+'">{% autoescape off %} '+data[i]['post_title']+'{% endautoescape %}</a> </h4></div>'+
+                                        '<div style="clear: both; border-bottom: 1px solid #bbbbbb; padding-top: 10px;"></div>'+
+                                        '<p>' +
+                                        '<div class="padding-left0 padding-right0">' +
+                                        '<p class="post-description-ajax'+data[i]['post_id']+'" style="display:none;">{% autoescape off %}'+data[i]['post_description']+'{% endautoescape %}</p>' +
+                                        '<p class="post-description-short-ajax'+data[i]['post_id']+'" style="display:block;"">{% autoescape off %}'+data[i]['post_description_short']+'{% endautoescape %}</p>' +
+                                        '</div>' +
+                                        '<hr>'+
+                                        '<div class="post-box-button pull-right sub-data'+data[i]['post_id']+'">' +
+                                        '<ul class="margin-0">' +
+                                        '<li><a href="#"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png"   style="margin-top: 0px; float:none; height:14px; margin-top: -7px;"></i>'+data[i]['post_selected_region']+'</a></li>' +
+                                        '<li><a href="#"><i class="fa fa-list-ul"></i>'+data[i]['post_sub_category']+'</a></li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="pull-left post-date'+data[i]['post_id']+'" style="line-height: 34px;"> '+data[i]['post_date']+'</div>'+
+                                        '</p>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div id="collapsefilter'+data[i]['post_id']+'" class="panel-collapse collapse">' +
+                                        '<div class="img-gallery">' +
+                                        '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+                                        '<tr class="images'+i+' images-div'+data[i]['post_id']+'">'+
+                                        '</tr>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div class="row margin-top10">'+
+                                        '<div class="contact-detail">'+
+                                        '<div class="pull-left post-date-new'+data[i]['post_id']+'" style="line-height: 34px; padding-left: 15px;">'+data[i]['post_date']+'</div> <button class="btn btn-action pull-right open-captcha contact_details_button" id="'+data[i]['post_id']+'" type="button">Contact Details</button>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'+
+                                        '</div>'
+                    );
+
+                        for(j=0;j<five_post_images_list_var.length;j++){
+                            $(".images"+i).append('<img class="img-galary" data-id="'+j+'" id="imageindex'+data[i]['post_id']+j+'" post-id="'+data[i]['post_id']+'"src="{{ MEDIA_URL }}'+five_post_images_list_var[j]+'" style="width:99px; height:95px; cursor: pointer;"></img>');
+                        }
+                    }
+
+                        }
+                    else{
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box> </div>' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div><p class="" style="color:red;">No Post Found!</div>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>'
+                            );
+                        }
+
+                       },
+                    error: function (data) {
+                        alert("error");
+                    }
+
+                });
+
+
+    });
+	$(document).on("click",".x-destroy",function(e) {
+        e.preventDefault();
+        var selected_menu = $(this).attr('data-menu');
+        $(this).parent("span").parent("span").remove();
+        var parent_name = $(this).attr("value");
+        var p_name = $(this).attr("data-id");
+        if(p_name=="category") {
+            var index = category_list_array.indexOf(parent_name);
+            category_list_array.splice(index,1);
+        }
+        if(p_name=="search_text") {
+            var index = search_post_title_array.indexOf(parent_name);
+            search_post_title_array.splice(index,1);
+        }
+        if(p_name=="region"){
+            var index = region_list_array.indexOf(parent_name);
+            region_list_array.splice(index,1);
+        }
+        var order_type = $('#order_type').val();
+        category_list_array_stringify= JSON.stringify(category_list_array);
+        region_list_array_stringify= JSON.stringify(region_list_array);
+        search_post_title_array_stringify= JSON.stringify(search_post_title_array);
+
+        $.ajax({
+                    url: "{% url "filterby-region-or-category" %}",
+                    type: "post",
+                    data: {'category_list_array_stringify': category_list_array_stringify,
+                           'region_list_array_stringify':region_list_array_stringify,
+                            'search_post_title_array_stringify':search_post_title_array_stringify,
+                            'selected_menu':selected_menu,
+                            'order_type':order_type},
+                    returnType: "text",
+                    success: function (data) {
+                         $(".post-alldata-panel-class").hide();
+                         $(".post-filterdata-panel-class").empty();
+                        if(data.length != 0){
+                            for (i = 0; i < data.length; i++) {
+
+                        var five_post_images_list_var = data[i]['five_post_images_list'];
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box post-box'+data[i]['post_id']+'">' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div class="left-part">'+
+                                        '<div class="post-box-img post-main-image'+data[i]['post_id']+'"><img src="{{ MEDIA_URL }}'+data[i]['post_image']+'" class="img-responsive" alt=""></div></div>'+
+                                        '<div class="right-part right-part'+data[i]['post_id']+'">'+
+                                        '<div class="post-box-title margin-0"><h4 class="panel-title margin-0"><i class="indicator glyphicon fa fa-caret-down  pull-right"></i><a class="accordion-toggle read-title-ajax" data-toggle="collapse" data-parent="#accordion" id="'+data[i]['post_id']+'" data-parent="#accordion" href="#collapsefilter'+data[i]['post_id']+'">{% autoescape off %} '+data[i]['post_title']+'{% endautoescape %}</a> </h4></div>'+
+                                        '<div style="clear: both; border-bottom: 1px solid #bbbbbb; padding-top: 10px;"></div>'+
+                                        '<p>' +
+                                        '<div class="padding-left0 padding-right0">' +
+                                        '<p class="post-description-ajax'+data[i]['post_id']+'" style="display:none;">{% autoescape off %}'+data[i]['post_description']+'{% endautoescape %}</p>' +
+                                        '<p class="post-description-short-ajax'+data[i]['post_id']+'" style="display:block;"">{% autoescape off %}'+data[i]['post_description_short']+'{% endautoescape %}</p>' +
+                                        '</div>' +
+                                        '<hr>'+
+                                        '<div class="post-box-button pull-right sub-data'+data[i]['post_id']+'">' +
+                                        '<ul class="margin-0">' +
+                                        '<li><a href="#"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png"   style="margin-top: 0px; float:none; height:14px; margin-top: -7px;"></i>'+data[i]['post_selected_region']+'</a></li>' +
+                                        '<li><a href="#"><i class="fa fa-list-ul"></i>'+data[i]['post_sub_category']+'</a></li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="pull-left post-date'+data[i]['post_id']+'" style="line-height: 34px;"> '+data[i]['post_date']+'</div>'+
+                                        '</p>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div id="collapsefilter'+data[i]['post_id']+'" class="panel-collapse collapse">' +
+                                        '<div class="img-gallery">' +
+                                        '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+                                        '<tr class="images'+i+' images-div'+data[i]['post_id']+'">'+
+                                        '</tr>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div class="row margin-top10">'+
+                                        '<div class="contact-detail">'+
+                                        '<div class="pull-left post-date-new'+data[i]['post_id']+'" style="line-height: 34px; padding-left: 15px;">'+data[i]['post_date']+'</div> <button class="btn btn-action pull-right open-captcha contact_details_button" id="'+data[i]['post_id']+'" type="button">Contact Details</button>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'+
+                                        '</div>'                   );
+
+                        for(j=0;j<five_post_images_list_var.length;j++){
+                            $(".images"+i).append('<img class="img-galary " data-id="'+j+'" id="imageindex'+data[i]['post_id']+j+'" post-id="'+data[i]['post_id']+'"src="{{ MEDIA_URL }}'+five_post_images_list_var[j]+'" style="width:99px; height:95px; cursor: pointer;"></img>');
+                        }
+                    }
+
+                        }
+                    else{
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box> </div>' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div><p class="" style="color:red;">No Post Found!</div>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>'
+                            );
+                        }
+
+                       },
+                    error: function (data) {
+                        alert("error");
+                    }
+
+                });
+
+    });
+
+        $(document).on("click",".search_post_data",function(e){
+            e.preventDefault();
+             var search_post_text = $('#search_post_text').val();
+             var parent_name = $('#menu_hidden_field').val();
+
+        if (search_post_text == ""){
+             $(".search-title-list-show").empty();
+             $(".search-title-list-show").append('<p>&nbsp;</p><p class="search-error-message" style="color:red;">No Data Found!</p>');
+             $('#search_post_text').val('');
+        }
+        else{
+            $(".search-title-list-show").hide();
+            var selected_menu = $('#menu_hidden_field').val();
+             var se = search_post_title_array.indexOf(search_post_text);
+             if(se == -1){
+               $(".bootstrap-tagsinput").append('<span class="tag label label-info">'+search_post_text+'<span> <a href="#" value="'+search_post_text+'" data-id="search_text" class="white x-destroy" data-menu="'+parent_name+'">X</a></span></span>');
+               search_post_title_array.push(search_post_text);
+             }
+             var order_type = $('#order_type').val();
+             category_list_array_stringify= JSON.stringify(category_list_array);
+             region_list_array_stringify= JSON.stringify(region_list_array);
+             search_post_title_array_stringify= JSON.stringify(search_post_title_array);
+            $.ajax({
+                    url: "{% url "filterby-region-or-category" %}",
+                    type: "post",
+                    data: {'category_list_array_stringify': category_list_array_stringify,
+                           'region_list_array_stringify':region_list_array_stringify,
+                           'search_post_title_array_stringify':search_post_title_array_stringify,
+                           'selected_menu':selected_menu,
+                           'order_type':order_type},
+                    returnType: "text",
+                    success: function (data) {
+                         $(".post-alldata-panel-class").hide();
+                         $(".post-filterdata-panel-class").empty();
+                       if(data.length != 0){
+                        for (i = 0; i < data.length; i++) {
+
+                        var five_post_images_list_var = data[i]['five_post_images_list'];
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box post-box'+data[i]['post_id']+'">' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div class="left-part">'+
+                                        '<div class="post-box-img post-main-image'+data[i]['post_id']+'"><img src="{{ MEDIA_URL }}'+data[i]['post_image']+'" class="img-responsive" alt=""></div></div>'+
+                                        '<div class="right-part right-part'+data[i]['post_id']+'">'+
+                                        '<div class="post-box-title margin-0"><h4 class="panel-title margin-0"><i class="indicator glyphicon fa fa-caret-down  pull-right"></i><a class="accordion-toggle read-title-ajax" data-toggle="collapse" data-parent="#accordion" id="'+data[i]['post_id']+'" data-parent="#accordion" href="#collapsefilter'+data[i]['post_id']+'">{% autoescape off %} '+data[i]['post_title']+'{% endautoescape %}</a> </h4></div>'+
+                                        '<div style="clear: both; border-bottom: 1px solid #bbbbbb; padding-top: 10px;"></div>'+
+                                        '<p>' +
+                                        '<div class="padding-left0 padding-right0">' +
+                                        '<p class="post-description-ajax'+data[i]['post_id']+'" style="display:none;">{% autoescape off %}'+data[i]['post_description']+'{% endautoescape %}</p>' +
+                                        '<p class="post-description-short-ajax'+data[i]['post_id']+'" style="display:block;"">{% autoescape off %}'+data[i]['post_description_short']+'{% endautoescape %}</p>' +
+                                        '</div>' +
+                                        '<hr>'+
+                                        '<div class="post-box-button pull-right sub-data'+data[i]['post_id']+'">' +
+                                        '<ul class="margin-0">' +
+                                        '<li><a href="#"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png"   style="margin-top: 0px; float:none; height:14px; margin-top: -7px;"></i>'+data[i]['post_selected_region']+'</a></li>' +
+                                        '<li><a href="#"><i class="fa fa-list-ul"></i>'+data[i]['post_sub_category']+'</a></li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="pull-left post-date'+data[i]['post_id']+'" style="line-height: 34px;"> '+data[i]['post_date']+'</div>'+
+                                        '</p>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div id="collapsefilter'+data[i]['post_id']+'" class="panel-collapse collapse">' +
+                                        '<div class="img-gallery">' +
+                                        '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+                                        '<tr class="images'+i+' images-div'+data[i]['post_id']+'">'+
+                                        '</tr>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div class="row margin-top10">'+
+                                        '<div class="contact-detail">'+
+                                        '<div class="pull-left post-date-new'+data[i]['post_id']+'" style="line-height: 34px; padding-left: 15px;">'+data[i]['post_date']+'</div> <button class="btn btn-action pull-right open-captcha contact_details_button" id="'+data[i]['post_id']+'" type="button">Contact Details</button>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'+
+                                        '</div>'                    );
+
+                        for(j=0;j<five_post_images_list_var.length;j++){
+                            $(".images"+i).append('<img class="img-galary " data-id="'+j+'" id="imageindex'+data[i]['post_id']+j+'" post-id="'+data[i]['post_id']+'"src="{{ MEDIA_URL }}'+five_post_images_list_var[j]+'" style="width:99px; height:95px; cursor: pointer;"></img>');
+                        }
+                    }
+
+                        }
+                    else{
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box> </div>' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div><p class="" style="color:red;">No Post Found!</div>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>'
+                            );
+                        }
+
+
+                       },
+                    error: function (data) {
+                        alert("error");
+                    }
+
+                });
+
+            $('#search_post_text').val('');
+        }
+
+
+     });
+    $(document).on("click","#order_id",function(e) {
+        e.preventDefault();
+        var order_type = $(this).val();
+        var selected_menu = $('#menu_hidden_field').val();
+        if (order_type != "") {
+        category_list_array_stringify= JSON.stringify(category_list_array);
+        region_list_array_stringify= JSON.stringify(region_list_array);
+        search_post_title_array_stringify= JSON.stringify(search_post_title_array);
+            $.ajax({
+                    url: "{% url "filterby-region-or-category" %}",
+                    type: "post",
+                    data: {'category_list_array_stringify': category_list_array_stringify,
+                           'region_list_array_stringify':region_list_array_stringify,
+                           'search_post_title_array_stringify':search_post_title_array_stringify,
+                           'selected_menu':selected_menu,
+                           'order_type':order_type},
+                    returnType: "text",
+                    success: function (data) {
+                        $(".post-alldata-panel-class").hide();
+                         $(".post-filterdata-panel-class").empty();
+                      if(data.length != 0){
+                          for (i = 0; i < data.length; i++) {
+                              var five_post_images_list_var = data[i]['five_post_images_list'];
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box post-box'+data[i]['post_id']+'">' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div class="left-part">'+
+                                        '<div class="post-box-img post-main-image'+data[i]['post_id']+'"><img src="{{ MEDIA_URL }}'+data[i]['post_image']+'" class="img-responsive" alt=""></div></div>'+
+                                        '<div class="right-part right-part'+data[i]['post_id']+'">'+
+                                        '<div class="post-box-title margin-0"><h4 class="panel-title margin-0"><i class="indicator glyphicon fa fa-caret-down  pull-right"></i><a class="accordion-toggle read-title-ajax" data-toggle="collapse" data-parent="#accordion" id="'+data[i]['post_id']+'" data-parent="#accordion" href="#collapsefilter'+data[i]['post_id']+'">{% autoescape off %} '+data[i]['post_title']+'{% endautoescape %}</a> </h4></div>'+
+                                        '<div style="clear: both; border-bottom: 1px solid #bbbbbb; padding-top: 10px;"></div>'+
+                                        '<p>' +
+                                        '<div class="padding-left0 padding-right0">' +
+                                        '<p class="post-description-ajax'+data[i]['post_id']+'" style="display:none;">{% autoescape off %}'+data[i]['post_description']+'{% endautoescape %}</p>' +
+                                        '<p class="post-description-short-ajax'+data[i]['post_id']+'" style="display:block;"">{% autoescape off %}'+data[i]['post_description_short']+'{% endautoescape %}</p>' +
+                                        '</div>' +
+                                        '<hr>'+
+                                        '<div class="post-box-button pull-right sub-data'+data[i]['post_id']+'">' +
+                                        '<ul class="margin-0">' +
+                                        '<li><a href="#"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png"   style="margin-top: 0px; float:none; height:14px; margin-top: -7px;"></i>'+data[i]['post_selected_region']+'</a></li>' +
+                                        '<li><a href="#"><i class="fa fa-list-ul"></i>'+data[i]['post_sub_category']+'</a></li>' +
+                                        '</ul>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '<div class="pull-left post-date'+data[i]['post_id']+'" style="line-height: 34px;"> '+data[i]['post_date']+'</div>'+
+                                        '</p>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div id="collapsefilter'+data[i]['post_id']+'" class="panel-collapse collapse">' +
+                                        '<div class="img-gallery">' +
+                                        '<table width="100%" border="0" cellspacing="0" cellpadding="0">' +
+                                        '<tr class="images'+i+' images-div'+data[i]['post_id']+'">'+
+                                        '</tr>' +
+                                        '</table>' +
+                                        '</div>' +
+                                        '<div class="clearfix"></div>' +
+                                        '<div class="row margin-top10">'+
+                                        '<div class="contact-detail">'+
+                                        '<div class="pull-left post-date-new'+data[i]['post_id']+'" style="line-height: 34px; padding-left: 15px;">'+data[i]['post_date']+'</div> <button class="btn btn-action pull-right open-captcha contact_details_button" id="'+data[i]['post_id']+'" type="button">Contact Details</button>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>' +
+                                        '</div>' +
+                                        '</div>'+
+                                        '</div>'
+                    );
+                            for(j=0;j<five_post_images_list_var.length;j++){
+                            $(".images"+i).append('<img class="img-galary " data-id="'+j+'" id="imageindex'+data[i]['post_id']+j+'" post-id="'+data[i]['post_id']+'"src="{{ MEDIA_URL }}'+five_post_images_list_var[j]+'" style="width:99px; height:95px; cursor: pointer;"></img>');
+                        }
+                          }
+                      }
+                    else{
+                            $(".post-filterdata-panel-class").append(
+                                        '<div class="post-box> </div>' +
+                                        '<div class="panel panel-default">' +
+                                        '<div class="panel-heading">' +
+                                        '<div><p class="" style="color:red;">No Post Found!</div>'+
+                                        '</div>'+
+                                        '</div>'+
+                                        '</div>'
+                            );
+                        }
+
+                    },
+
+                    error: function (data) {
+                        alert("error");
+                    }
+
+            });
+   }
+  });
+});
+
+</script>
+
+<script>
+    $(document).on("click",".open-captcha",function(e){
+            var post_id = $(this).attr("id");
+            $(".model_post_id").val(post_id);
+            $.ajax({
+
+                    url: "{% url "capcha-match" %}",
+                    type: "post",
+                    data: {'get_captcha':"get_captcha"},
+                    returnType: "text",
+                    success: function (data) {
+                        $('.bs-example-modal-sm').modal('show');
+                        $('.contactdetails-show-div').hide();
+                        $('.captcha-form').html(data['form']);
+                        $(".captcha-form label").remove();
+                        $('#error_field').hide();
+                        $('.captcha-show-div').show();
+                    },
+                    error:function (data) {
+                    }
+                });
+
+    });
+
+    $(document).on("click",".refresh-captcha-button",function(e){
+            $.ajax({
+
+                    url: "{% url "capcha-match" %}",
+                    type: "post",
+                    data: {'get_captcha':"get_captcha"},
+                    returnType: "text",
+                    success: function (data) {
+
+                        $('.bs-example-modal-sm').modal('show');
+                        $('.contactdetails-show-div').hide();
+                        $('.captcha-form').html(data['form']);
+                        $(".captcha-form label").remove();
+                        $('#error_field').hide();
+                        $('.captcha-show-div').show();
+                    },
+                    error:function (data) {
+                    }
+                });
+
+    });
+
+    $(document).on("click",".show-contact-details-button",function(e){
+            var post_id = $(".model_post_id").val();
+            var recaptcha_challenge_field = $("#id_captcha_0").val();
+            var recaptcha_response_field = $("#id_captcha_1").val();
+
+                $.ajax({
+                url: "{% url "capcha-match" %}",
+                type: "post",
+                data: {'recaptcha_challenge_field': recaptcha_challenge_field,
+                        'recaptcha_response_field':recaptcha_response_field,
+                        'post_id':post_id},
+                returnType: "text",
+                success: function (data) {
+
+                        if(data['message'] == "True") {
+
+                            $('.captcha-show-div').hide();
+                            $('.contactdetails-show-div').show();
+                            $('#name').html("<strong>Name:- </strong>&nbsp;"+data['name']);
+                            $('#contact').html("<strong>Email:-</strong>&nbsp;"+data['contact']);
+                            $('#tel').html("<strong>Tel:-</strong>&nbsp;"+data['tel']);
+                            $('#company_name').html("<strong>Bemerkung:-</strong>&nbsp;"+data['company_name']);
+                        }
+                        else{
+                            $('#error_field').show();
+                            $('#error_field').text("Enter Correct Captcha!");
+                            }
+
+                        },
+                error:function (data) {
+                }
+            });
+         });
+</script>
+
+<script>
+    $(document).ready(function(e) {
+     $(document).on('click','.img-galary',function(){
+            var src = $(this).attr('src');
+                var img = '<img src="' + src + '" class="img-responsive" style="height: 313px; width: 4100px;"/>';
+                //Start of new code
+                var index = $(this).attr('data-id');
+                var post_id = $(this).attr('post-id');
+                var index = parseInt(index);
+                var html = '';
+                html += img;
+                html += '<div style="height:25px;clear:both;display:block;">';
+                html += '<a class="controls next" href="'+ (index+2) + '" post-id="'+post_id+'" style="float:right; text-align:right; width:50px; display:block; font-size:11px; padding-top:8px; font-weight:bold;">next &raquo;</a>';
+                html += '<a class="controls previous" href="' + (index) + '" post-id="'+post_id+'" style="width:50px; display:block; font-size:11px; padding-top:8px; font-weight:bold;">&laquo; prev</a>';
+                html += '</div>';
+                //End of new code
+                $('#myModal').modal();
+                $('#myModal').on('shown.bs.modal', function(){
+                    $('#myModal .modal-body').html(html);
+                     $('a.controls').trigger('click');
+                });
+                $('#myModal').on('hidden.bs.modal', function(){
+                    $('#myModal .modal-body').html('');
+                });
+           });
+        });
+        $(document).on('click', 'a.controls', function(){
+
+                    var index = $(this).attr('href');
+                    var post_id = $(this).attr('post-id');
+                    var index = parseInt(index-1);
+                    var src = $('#imageindex'+ post_id + index).attr('src');
+                    $('.modal-body img').attr('src', src);
+
+                    var newPrevIndex = parseInt(index);
+                    var newNextIndex = parseInt(newPrevIndex) + 2;
+                    if($(this).hasClass('previous')){
+                        $(this).attr('href', newPrevIndex);
+                        $('a.next').attr('href', newNextIndex);
+                    }else{
+                        $(this).attr('href', newNextIndex);
+                        $('a.previous').attr('href', newPrevIndex);
+                    }
+                var total = $('.images-div'+post_id).children('td').length +1;
+                //hide next button
+                if(total === newNextIndex){
+                    $('a.next').hide();
+                }else{
+                    $('a.next').show()
+                }
+                //hide previous button
+                if(newPrevIndex === 0){
+                    $('a.previous').hide();
+                }else{
+                    $('a.previous').show()
+                }
+
+               return false;
+            });
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+    <div class="home-tab">
+      <ul>
+        <li class="active border-right"><a href="{% url 'menu-all-post' "Arbeit" %} " class="Arbeit-menu-class" value="Arbeit">Arbeit</a></li>
+        <li class="border-right" ><a href="{% url 'menu-all-post' "Gebrauchtes" %}" class="Gebrauchtes-menu-class" value="Gebrauchtes">Gebrauchtes</a></li>
+        <li ><a href="{% url 'menu-all-post' "Produkte" %}" class="Produkte-menu-class" value="Produkte">Produkte</a></li>
+      </ul>
+    </div>
+    <div class="content">
+      <div class="col-lg-9">
+        <div class="row">
+          <div class="nav-bar-tab">
+            <ul>
+              <li><a href="#" rel="#region-sub-menu"class="parent" value="region"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png" height="14" style="margin-top: -7px; float:none;"></i></a></li>
+              <li><a href="#" rel="#category-sub-menu"  class="parent" value="category"><i class="fa fa-list-ul"></i></a></li>
+              <li class="active"><a rel="#white-box" class="parent"><i class="fa fa-search" style="cursor:pointer;"></i></a></li>
+                <div class="sub-menu">
+               <div id="category-sub-menu" class="category-collapse" >{% if sub_category_details %}{% for s in sub_category_details %} <a class="tag" rel={{ s.sub_category }} data-menu="{{ menu_category }}">{{ s.sub_category }}</a>{% endfor %}{% endif %} </div>
+                <div id="region-sub-menu" class="region-collapse" style="display:none;">{% if region %}{% for r in region %} <a class="tag" rel={{ r.region }}>{{ r.region }}</a>{% endfor %} {% endif %} </div>
+              </div>
+            </ul>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4 padding-left0">
+            <div class="white-box" id="white-box" style="display:none;">
+              <form>
+                <button type="submit" class="btn btn-action search-button search_post_data" >Search</button>
+                 <input type="hidden" class="form-control"  id="menu_hidden_field" value="{{ menu_category }}"/>
+                <input type="text" class="form-control" style="width: 97%;" id="search_post_text" placeholder="Enter text here...">
+              </form>
+               <div class="search-title-list-show">
+
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8 padding-right0">
+            <div class="white-box">
+              <div class="bootstrap-tagsinput pull-left" style="background-color:#ffff00">
+              </div>
+            <div class="pull-right">
+                <select name="sub_category"  id="order_id" class="form-control" style="width:140px;height:32px;">
+                <option value="" selected>Order By Date</option>
+                 <option value="ascending">Neueste zuerst</option>
+                 <option value="decending">Älteste zuerst</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+            <div class="panel-group post-alldata-panel-class" id="accordion">
+          {% if menu_all_post_list %}
+              {%  for m in menu_all_post_list %}
+                <div class="post-box post-box{{ m.post_id }}">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                  <div class="left-part"><div class="post-box-img post-main-image{{ m.post_id }}" ><img src="{{ m.post_image|media_resize:'144x144'}}" class="img-responsive"  alt="" ></div></div>
+                  <div class="right-part right-part{{ m.post_id }}">
+                    <div class="post-box-title margin-0 "><h4 class="panel-title margin-0" ><i class="indicator glyphicon fa fa-caret-down  pull-right"></i> <a class="accordion-toggle read-title " data-toggle="collapse" data-parent="#accordion" id="{{ m.post_id }}" href="#collapse{{ m.post_id }}">{% autoescape off %} {{ m.post_title }}{% endautoescape %}</a> </h4></div>
+                    <div style="clear: both; border-bottom: 1px solid #bbbbbb;  "></div>
+                    <p>
+                    <div class="padding-left0 padding-right0 ">
+                      <p class="post-description{{ m.post_id }}" style="display:none;">{% autoescape off %}{{ m.post_description }}{% endautoescape %}</p>
+                      <p class="post-description-short{{ m.post_id }}" style="display:block;">{% autoescape off %}{{ m.post_description_short }}{% endautoescape %}</p>
+                  </div>
+
+                    </hr>
+                      <div class="post-box-button pull-right sub-data{{ m.post_id }}">
+                        <ul class="margin-0">
+                            <li><a href="#"><i class="fa"><img src="{{ STATIC_URL }}images/region-icon.png"  style="margin-top: 0px; float:none; height:14px; margin-top: -7px;"></i> {{ m.post_selected_region }}</a></li>
+                          <li><a href="#"><i class="fa fa-list-ul"></i> {{ m.post_sub_category }}</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                      <div class="pull-left post-date{{ m.post_id }}" style="line-height: 34px;">{{ m.post_date }}</div>
+
+                    </p>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div id="collapse{{ m.post_id }}" class="panel-collapse collapse" data-role="collapsible">
+
+                    <div class="img-gallery">
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr class="images-div{{ m.post_id}}">
+
+                          {% for f in m.first_five_images %}
+                              <td class="pull-left"><img class="img-galary " data-id="{{ forloop.counter0 }}" id="imageindex{{ m.post_id }}{{ forloop.counter0 }}" post-id="{{ m.post_id }}" src="{{ MEDIA_URL }}{{ f.post_image}}"  alt="" style="width: 99px; height:95px; cursor: pointer;"></td>
+                         {% endfor %}
+                        </tr>
+                      </table>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="row margin-top10">
+                        <div class="contact-detail">
+                            <div class="pull-left post-date-new{{ m.post_id }}" style="line-height: 34px; padding-left: 15px;">{{ m.post_date }}</div> <button class="btn btn-action pull-right open-captcha contact_details_button " id="{{ m.post_id }}" type="button">Contact Details</button>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {% endfor %}
+              {% endif %}
+            {% if not post_title %}
+              <div class="white-box text-center">
+                <ul class="pagination">
+                    <div class="pagination">
+                    <span class="step-links">
+                    {% if menu_all_post_list.has_previous %}
+                        <a href="?page={{ menu_all_post_list.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                     Page {{ menu_all_post_list.number }} of {{ menu_all_post_list.paginator.num_pages }}
+                    </span>
+
+                    {% if menu_all_post_list.has_next %}
+                        <a href="?page={{ menu_all_post_list.next_page_number }}">next</a>
+                    {% endif %}
+                    </span>
+
+                    </div>
+                </ul>
+            </div>
+            {% endif %}
+            </div>
+
+            <div class="panel-group post-filterdata-panel-class" id="accordion1">
+            </div>
+
+                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content " style=" padding:0px;">
+                  <div class="modal-body">
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
+
+            <p>&nbsp;</p>
+
+          </div>
+        </div>
+
+      </div>
+      <br>
+      </div>
+    {% for v in verticle_ads_list%}
+      <div class="col-lg-3 padding-left-0 padding-right-0"><img style="width: 100%; margin-bottom: 15px;" src="{{ MEDIA_URL }}{{ v }}" alt=""></div>
+    </div>
+    {% endfor %}
+    <div class="clearfix"></div>
+    <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+             <div class="modal-dialog modal-sm">
+               <div class="modal-content">
+                   <div class="captcha-show-div">
+                       <p>Enter Correct Captcha To Show Contact Details.</p>
+                       <input type="hidden" class="form-control model_post_id" name="post_id" value="">
+                       <p class="captcha-form"></p>
+                        <p class="refresh-captcha-button" id="" style="cursor: pointer; color: red">Refresh</p>
+                        <button class="btn btn-action show-contact-details-button" id="" type="button"> Get Contact Details</button></p>
+                       <label for="error_field" id="error_field" style="color: red" ></label>
+                   </div>
+                   <div class="contactdetails-show-div" style="display:none;">
+                        <h4>Contact Details</h4>
+                        <p id="name"><strong>Name:</strong></p>
+                    	<p id="contact"><strong>Email:</strong></p>
+                    	<p id="tel"><strong>Tel:</strong></p>
+                    	<p id="company_name"><strong>Bemerkung:</strong></p>
+                   </div>
+               </div>
+
+         	    </div>
+               </div>
+
+
+    <style>
+
+    .ads2{display: block; position: relative !important; width: 100% !important;}
+    .captcha{ width: 30% !important;}
+</style>
+
+<script>
+$(document).on("click",".open-captcha",function(e){
+            var post_id = $(this).attr("id");
+            $(".model_post_id").val(post_id);
+            $.ajax({
+                    url: "{% url "capcha-match" %}",
+                    type: "post",
+                    data: {'get_captcha':"get_captcha"},
+                    returnType: "text",
+                    success: function (data) {
+                        $('.bs-example-modal-sm').modal('show');
+                        $('.contactdetails-show-div').hide();
+                        $('.captcha-form').html(data['form']);
+                        $(".captcha-form label").remove();
+                        $('#error_field').hide();
+                        $('.captcha-show-div').show();
+                    },
+                    error:function (data) {
+                    }
+                });
+
+    });
+
+$(document).ready(function() {
+       $(document).on('click','.read-title',function(e) {
+		e.preventDefault();
+        var div_id = $(this).attr("id");
+           setTimeout(function() {
+            if ( $("#collapse"+div_id).hasClass('in') ){
+                $(".post-date" + div_id).hide();
+                $(".post-main-desc" + div_id).hide();
+                $(".post-date-new" + div_id).show();
+                $(".post-box" + div_id).css({"border": "1px solid #7A41B0"});
+                $(".post-description-short"+div_id).css("display", "none");
+                $(".post-description"+div_id).css("display", "block");
+            }
+            else{
+                $(".post-main-desc" + div_id).show();
+                $(".post-date-new" + div_id).hide();
+                $(".post-date" + div_id).show();
+                $(".post-box" + div_id).css({"border-bottom":"#e0e0e0 solid 1px","border-right":"#e0e0e0 solid 1px","border-left":"#e0e0e0 solid 1px","border-top":"#db2e2e solid 1px"});
+                $(".post-description-short"+div_id).css("display", "block");
+                $(".post-description"+div_id).css("display", "none");
+            }
+        }, 350);
+    });
+ });
+
+$(document).ready(function() {
+       $(document).on('click','.read-title-ajax',function(e) {
+		e.preventDefault();
+        var div_id = $(this).attr("id");
+           setTimeout(function() {
+            if ( $("#collapsefilter"+div_id).hasClass('in') ){
+               $(".post-date" + div_id).hide();
+               $(".post-date-new" + div_id).show();
+               $(".post-box" + div_id).css({"border": "1px solid #7A41B0"});
+                $(".post-description-short-ajax" + div_id).css("display", "none");
+                $(".post-description-ajax" + div_id).css("display", "block");
+            }
+            else{
+
+                $(".post-date-new" + div_id).hide();
+                $(".sub-data-new" + div_id).hide();
+                $(".post-date" + div_id).show();
+                $(".sub-data" + div_id).show();
+                $(".post-box" + div_id).css({"border-bottom":"#e0e0e0 solid 1px","border-right":"#e0e0e0 solid 1px","border-left":"#e0e0e0 solid 1px","border-top":"#db2e2e solid 1px"});
+                 $(".post-description-short-ajax" + div_id).css("display", "block");
+                $(".post-description-ajax" + div_id).css("display", "none");
+            }
+        }, 350);
+    });
+});
+</script>
+{% endblock %}
