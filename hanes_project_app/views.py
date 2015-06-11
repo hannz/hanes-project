@@ -24,9 +24,17 @@ from hanes_project_app.models import Add_Post_Details, Menu_Category, Sub_Catego
     AdvertisementDetails
 from captcha.models import CaptchaStore
 from django.db.models import Q
+
+
+
+
+
 #Convert months and weeks into no. of days
+
+
 def date_convert(post_time,post_set_timer):
-    global d
+    # global d
+    d = post_time + timedelta(days=1)
     if post_set_timer == "3 days":
         days = 3
         d = post_time + timedelta(days=days)
